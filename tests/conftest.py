@@ -46,19 +46,26 @@ AsyncTestingSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_c
 AsyncSessionScoped = scoped_session(AsyncTestingSessionLocal)
 
 @pytest.fixture
-async def user_token(user):
-    # Create a user token with 'sub' as the user's email
-    return create_access_token(data={"sub": user.email})
+def login_request_data():
+    return {"username": "john_doe_123", "password": "SecurePassword123!"}
+
+#Token Fixtures
+@pytest.fixture
+async def user_token(verified_user):
+    token_data = {"sub": str(verified_user.id), "role": "AUTHENTICATED"}
+    return create_access_token(data=token_data)
+
 
 @pytest.fixture
 async def admin_token(admin_user):
-    # Create an admin token with 'sub' as the admin's email and 'role' as admin
-    return create_access_token(data={"sub": admin_user.email, "role": "admin"})
+    token_data = {"sub": str(admin_user.id), "role": "ADMIN"}
+    return create_access_token(data=token_data)
+
 
 @pytest.fixture
 async def manager_token(manager_user):
-    # Create a manager token with 'sub' as the manager's email and 'role' as manager
-    return create_access_token(data={"sub": manager_user.email, "role": "manager"})
+    token_data = {"sub": str(manager_user.id), "role": "MANAGER"}
+    return create_access_token(data=token_data)
 
 @pytest.fixture
 def email_service():
