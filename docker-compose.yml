@@ -39,6 +39,8 @@ services:
         condition: service_healthy
     networks:
       - app-network
+    env_file:
+      - .env  # Specify the .env file here
 
   nginx:
     image: nginx:latest
